@@ -63,6 +63,12 @@ class Book(AutoTiming):
         """The url for the detail view of this book"""
         return reverse("book-detail", args=[str(self.id)])
 
+    def display_genre(self):
+        """Display the top 3 genres in string form"""
+        return ", ".join(genre.name for genre in self.genre.all()[:3])
+
+    display_genre.short_description = "Genre"
+
 
 class BookInstance(AutoTiming):
     """A specific copy of a book (that can be borrowed from the library)"""
