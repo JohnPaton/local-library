@@ -1,0 +1,19 @@
+version: '3'
+services:
+  django_dev:
+    build:
+      context: .
+      dockerfile: dockerfiles/django/Dockerfile
+    volumes:
+    - ./data:/usr/local-library/data
+    - ./catalog:/usr/local-library/catalog
+    - ./locallibrary:/usr/local-library/locallibrary
+    command:
+    - python3
+    - manage.py
+    - runserver
+    - "0.0.0.0:8000"
+    environment:
+    - LOCALLIBRARY_DEBUG=true
+    ports:
+    - "8000:8000"

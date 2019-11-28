@@ -23,9 +23,9 @@ BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 SECRET_KEY = "hujgwa9j^q^*#x_ddrnsy$0@x!3(2)km2hg!88l1(*o2don3xm"
 
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = True
+DEBUG = os.environ.get("LOCALLIBRARY_DEBUG", "").lower() == "true"
 
-ALLOWED_HOSTS = []
+ALLOWED_HOSTS = ["nginx", "localhost", "127.0.0.1"]
 
 
 # Application definition
@@ -115,3 +115,4 @@ USE_TZ = True
 # https://docs.djangoproject.com/en/2.2/howto/static-files/
 
 STATIC_URL = "/static/"
+STATIC_ROOT = os.path.join("locallibrary", "static")

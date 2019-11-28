@@ -1,8 +1,18 @@
 version: '3'
 services:
   django:
-    build: .
-    ports:
-    - "8000:8000"
+    build:
+      context: .
+      dockerfile: dockerfiles/django/Dockerfile
     volumes:
     - ./data:/usr/local-library/data
+  nginx:
+    build:
+      context: .
+      dockerfile: dockerfiles/nginx/Dockerfile
+    volumes:
+    - ./nginx.conf:/etc/nginx/conf.d/default.conf
+    ports:
+    - 8000:80
+    depends_on:
+      - django
