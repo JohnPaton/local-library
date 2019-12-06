@@ -20,6 +20,10 @@ def index(request):
 
     num_authors = Author.objects.count()
 
+    # Number of visits by this browser (from sessions)
+    num_visits = request.session.get("num_visits", 0)
+    request.session["num_visits"] = num_visits + 1
+
     return render(request, "index.html", context=locals())
 
 
