@@ -96,6 +96,8 @@ AUTH_PASSWORD_VALIDATORS = [
     },
 ]
 
+# Login redirect
+LOGIN_REDIRECT_URL = "/"
 
 # Internationalization
 # https://docs.djangoproject.com/en/2.2/topics/i18n/
@@ -116,3 +118,6 @@ USE_TZ = True
 
 STATIC_URL = "/static/"
 STATIC_ROOT = os.path.join("locallibrary", "static")
+
+# Log emails to console (since we don't have a real email provider)
+EMAIL_BACKEND = "django.core.mail.backends.console.EmailBackend"

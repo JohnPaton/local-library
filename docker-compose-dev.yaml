@@ -8,6 +8,7 @@ services:
     - ./data:/usr/local-library/data
     - ./catalog:/usr/local-library/catalog
     - ./locallibrary:/usr/local-library/locallibrary
+    - ./templates:/usr/local-library/templates
     command:
     - python3
     - manage.py
