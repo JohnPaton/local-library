@@ -1,11 +1,20 @@
+import datetime
+
+
 from django.shortcuts import render
 from django.views import generic
+from django.views.generic.edit import CreateView, UpdateView, DeleteView
 from django.contrib.auth.mixins import (
     LoginRequiredMixin,
     PermissionRequiredMixin,
 )
+from django.contrib.auth.decorators import permission_required
+from django.shortcuts import get_object_or_404
+from django.http import HttpResponseRedirect
+from django.urls import reverse, reverse_lazy
 
 from catalog.models import Book, Author, BookInstance, Genre
+from catalog.forms import RenewBookForm
 
 # Create your views here.
 
@@ -87,3 +96,51 @@ class LoanedBooksListView(PermissionRequiredMixin, generic.ListView):
         return BookInstance.objects.filter(status__exact="o").order_by(
             "due_back"
         )
+
+
+@permission_required("catalog.can_mark_returned")
+def renew_book_librarian(request, pk):
+    """Renew a specific BookInstance as a librarian"""
+    book_instance = get_object_or_404(BookInstance, pk=pk)
+
+    # If this is a POST request then process the Form data
+    if request.method == "POST":
+
+        # Bind a form instance
+        form = RenewBookForm(request.POST)
+
+        # Check if the form is valid:
+        if form.is_valid():
+            # use data from form.cleaned_data and NOT request.POST
+            # It's validated and also cast to Python types
+            book_instance.due_back = form.cleaned_data["renewal_date"]
+            book_instance.save()
+
+            return HttpResponseRedirect(reverse("borrowed"))
+
+    # If this is a GET (or any other method) create the default form.
+    else:
+        proposed_renewal_date = datetime.date.today() + datetime.timedelta(
+            weeks=3
+        )
+        form = RenewBookForm(initial={"renewal_date": proposed_renewal_date})
+
+    context = {"form": form, "book_instance": book_instance}
+
+    return render(request, "catalog/book_renew_librarian.html", context)
+
+
+class AuthorCreate(CreateView):
+    model = Author
+    fields = "__all__"
+    # initial = {"date_of_death": "05/01/2018"}  # just for show
+
+
+class AuthorUpdate(UpdateView):
+    model = Author
+    fields = ["first_name", "last_name", "date_of_birth", "date_of_death"]
+
+
+class AuthorDelete(DeleteView):
+    model = Author
+    success_url = reverse_lazy("authors")
