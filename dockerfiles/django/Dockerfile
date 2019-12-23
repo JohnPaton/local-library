@@ -25,7 +25,6 @@ RUN python3 manage.py collectstatic --no-input --link
 EXPOSE 8000
 CMD [ \
     "gunicorn", \
-        "--log-level", "DEBUG", \
         "--bind", "0.0.0.0:8000", \
         "--worker-class", "eventlet", \
         "--keep-alive", "75", \
