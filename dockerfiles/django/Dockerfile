@@ -28,5 +28,6 @@ CMD [ \
         "--log-level", "DEBUG", \
         "--bind", "0.0.0.0:8000", \
         "--worker-class", "eventlet", \
+        "--keep-alive", "75", \
         "locallibrary.wsgi:application" \
 ]
